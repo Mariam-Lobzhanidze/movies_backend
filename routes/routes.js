@@ -7,7 +7,17 @@ const {
   getAllUsers,
   changeUserRole,
 } = require("../controllers/userController");
-const { getTrailerById, getPopularMoviesByPageNumber } = require("../controllers/moviesController");
+const {
+  getTrailerById,
+  getPopularMoviesByPageNumber,
+  getMovieDetails,
+  getMovieImages,
+  getSimilarMovies,
+  getMoviesInTheatre,
+  addToFavorites,
+  removeFromFavorites,
+  getUserFavorites,
+} = require("../controllers/moviesController");
 
 const router = express.Router();
 const authMiddleware = require("../middleware/authMiddleware");
@@ -23,5 +33,18 @@ router.put("/users/role/:id", authMiddleware, changeUserRole);
 
 router.get("/movies/:id/trailer", getTrailerById);
 router.get("/popular", getPopularMoviesByPageNumber);
+router.get("/theatre", getMoviesInTheatre);
+router.get("/movies/:id", getMovieDetails);
+router.get("/movies/:id/images", getMovieImages);
+router.get("/movies/:id/similar", getSimilarMovies);
+
+//
+
+router.post("/favorites/add", authMiddleware, addToFavorites);
+router.delete("/favorites/remove", authMiddleware, removeFromFavorites);
+router.get("/favorites/:userId", authMiddleware, getUserFavorites);
+
+// router.post("/watchlist/add", authMiddleware, addToWatchlist);
+// router.delete("/watchlist/remove", authMiddleware, removeFromWatchlist);
 
 module.exports = router;
