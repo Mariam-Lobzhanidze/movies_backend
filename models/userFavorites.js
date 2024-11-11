@@ -1,10 +1,11 @@
+// models/UserFavorites.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/sequelize");
 const User = require("./userModel");
 const Movie = require("./movieModel");
 
-const UserWatchlist = sequelize.define(
-  "UserWatchlist",
+const UserFavorites = sequelize.define(
+  "UserFavorites",
   {
     userId: {
       type: DataTypes.UUID,
@@ -25,8 +26,8 @@ const UserWatchlist = sequelize.define(
   },
   {
     timestamps: false,
-    tableName: "UserWatchlist",
+    tableName: "UserFavorites",
   }
 );
 
-module.exports = UserWatchlist;
+module.exports = UserFavorites;

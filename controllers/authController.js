@@ -1,6 +1,8 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const userService = require("../services/userService");
+const User = require("../models/userModel");
+const Movie = require("../models/movieModel");
 
 const register = async (req, res) => {
   const { username, email, password } = req.body;
@@ -42,15 +44,31 @@ const login = async (req, res) => {
 
     const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
+    const userWithDetails = await User.findByPk(user.id, {
+      include: [
+        {
+          model: Movie,
+          as: "favorites",
+          through: { attributes: [] },
+        },
+        {
+          model: Movie,
+          as: "watchlist",
+          through: { attributes: [] },
+        },
+      ],
+    });
+
     const userData = {
       id: user.id,
       username: user.username,
       role: user.role,
       status: user.status,
       profile_image_url: user.profile_image_url,
-      language: user.language,
-      theme: user.theme,
+      favorites: userWithDetails.favorites,
+      watchlist: userWithDetails.watchlist,
     };
+
     res.json({ token, user: userData });
   } catch (error) {
     console.error(error);

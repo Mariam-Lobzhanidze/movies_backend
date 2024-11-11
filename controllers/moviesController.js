@@ -131,6 +131,7 @@ const getMoviesInTheatre = async (req, res) => {
 
     const moviesInTheatre = response.data.results.slice(0, 10).map((movie) => ({
       backdrop_path: movie.backdrop_path,
+      poster_path: movie.poster_path,
       title: movie.title,
     }));
 
@@ -144,11 +145,44 @@ const getMoviesInTheatre = async (req, res) => {
 
 ///
 
+const addToWatchList = async (req, res) => {
+  const { userId, movieId } = req.body;
+  try {
+    const response = await movieService.addToWatchList(userId, movieId);
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error in addToWatchList controller:", error.message);
+    res.status(500).send(error.message);
+  }
+};
+
+const removeFromWatchList = async (req, res) => {
+  const { userId, movieId } = req.query;
+  try {
+    const response = await movieService.removeFromWatchList(userId, movieId);
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error in removeFromWatchList controller:", error.message);
+    res.status(500).send(error.message);
+  }
+};
+
+const getUserWatchList = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const watchlist = await movieService.getUserWatchList(userId);
+    res.status(200).json(watchlist);
+  } catch (error) {
+    console.error("Error in getUserWatchList controller:", error.message);
+    res.status(500).send(error.message);
+  }
+};
+
 const addToFavorites = async (req, res) => {
   const { userId, movieId } = req.body;
   try {
-    const message = await movieService.addToFavorites(userId, movieId);
-    res.status(200).send(message);
+    const response = await movieService.addToFavorites(userId, movieId);
+    res.status(200).json(response);
   } catch (error) {
     console.error("Error in addToFavorites controller:", error.message);
     res.status(500).send(error.message);
@@ -156,10 +190,10 @@ const addToFavorites = async (req, res) => {
 };
 
 const removeFromFavorites = async (req, res) => {
-  const { userId, movieId } = req.body;
+  const { userId, movieId } = req.query;
   try {
-    const message = await movieService.removeFromFavorites(userId, movieId);
-    res.status(200).send(message);
+    const response = await movieService.removeFromFavorites(userId, movieId);
+    res.status(200).json(response);
   } catch (error) {
     console.error("Error in removeFromFavorites controller:", error.message);
     res.status(500).send(error.message);
@@ -187,4 +221,7 @@ module.exports = {
   addToFavorites,
   removeFromFavorites,
   getUserFavorites,
+  addToWatchList,
+  removeFromWatchList,
+  getUserWatchList,
 };

@@ -17,6 +17,9 @@ const {
   addToFavorites,
   removeFromFavorites,
   getUserFavorites,
+  addToWatchList,
+  removeFromWatchList,
+  getUserWatchList,
 } = require("../controllers/moviesController");
 
 const router = express.Router();
@@ -44,7 +47,8 @@ router.post("/favorites/add", authMiddleware, addToFavorites);
 router.delete("/favorites/remove", authMiddleware, removeFromFavorites);
 router.get("/favorites/:userId", authMiddleware, getUserFavorites);
 
-// router.post("/watchlist/add", authMiddleware, addToWatchlist);
-// router.delete("/watchlist/remove", authMiddleware, removeFromWatchlist);
+router.post("/watchlist/add", authMiddleware, addToWatchList);
+router.delete("/watchlist/remove", authMiddleware, removeFromWatchList);
+router.get("/watchlist/:userId", authMiddleware, getUserWatchList);
 
 module.exports = router;
