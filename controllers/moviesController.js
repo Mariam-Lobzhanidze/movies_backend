@@ -3,6 +3,7 @@ const movieService = require("../services/movieService");
 const BEARER_TOKEN = process.env.MOVIES_BEARER_TOKEN;
 const API_KEY = process.env.MOVIES_API_KEY;
 const BASE_URL = process.env.MOVIES_BASE_URL;
+const SEARCH_URL = process.env.MOVIES_SEARCH_URL;
 
 const HEADERS_OBJECT = {
   Authorization: `Bearer ${BEARER_TOKEN}`,
@@ -211,6 +212,37 @@ const getUserFavorites = async (req, res) => {
   }
 };
 
+const searchMovies = async (req, res) => {
+  const { query, page = 1 } = req.query;
+  if (!query) {
+    return res.status(400).send("Search query is required.");
+  }
+
+  try {
+    const response = await axios.get(
+      `${SEARCH_URL}?api_key=${API_KEY}&query=${query}&page=${page}&language=en-US`,
+      {
+        headers: HEADERS_OBJECT,
+      }
+    );
+
+    const searchResults = response.data.results.map((movie) => ({
+      id: movie.id,
+      title: movie.title,
+      overview: movie.overview,
+      poster_path: movie.poster_path,
+      vote_average: movie.vote_average,
+    }));
+
+    res.json({
+      results: searchResults,
+    });
+  } catch (error) {
+    console.error("Error searching for movies:", error.response?.data || error.message);
+    res.status(500).send("Error searching for movies");
+  }
+};
+
 module.exports = {
   getTrailerById,
   getPopularMoviesByPageNumber,
@@ -224,4 +256,5 @@ module.exports = {
   addToWatchList,
   removeFromWatchList,
   getUserWatchList,
+  searchMovies,
 };

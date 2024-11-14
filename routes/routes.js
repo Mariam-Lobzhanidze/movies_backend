@@ -20,6 +20,7 @@ const {
   addToWatchList,
   removeFromWatchList,
   getUserWatchList,
+  searchMovies,
 } = require("../controllers/moviesController");
 
 const router = express.Router();
@@ -50,5 +51,7 @@ router.get("/favorites/:userId", authMiddleware, getUserFavorites);
 router.post("/watchlist/add", authMiddleware, addToWatchList);
 router.delete("/watchlist/remove", authMiddleware, removeFromWatchList);
 router.get("/watchlist/:userId", authMiddleware, getUserWatchList);
+
+router.get("/search", searchMovies);
 
 module.exports = router;
