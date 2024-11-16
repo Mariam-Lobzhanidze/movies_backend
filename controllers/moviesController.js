@@ -19,7 +19,12 @@ const getPopularMoviesByPageNumber = async (req, res) => {
       headers: HEADERS_OBJECT,
     });
 
-    const popularMovies = response.data.results;
+    const popularMovies = response.data.results.slice(0, 10).map((movie) => ({
+      id: movie.id,
+      title: movie.title,
+      vote_average: movie.vote_average,
+      poster_path: movie.poster_path,
+    }));
 
     res.json({
       results: popularMovies,
@@ -37,7 +42,13 @@ const getTrailerById = async (req, res) => {
       headers: HEADERS_OBJECT,
     });
 
-    res.json(response.data);
+    const trailer = response.data.results.find((item) => item.type === "Trailer");
+
+    if (trailer) {
+      res.json({ trailerKey: trailer.key });
+    } else {
+      res.status(404).json({ message: "No trailer found" });
+    }
   } catch (error) {
     console.error("Error fetching trailer:", error.response?.data || error.message);
     res.status(500).send("Error fetching trailer");
@@ -130,7 +141,7 @@ const getMoviesInTheatre = async (req, res) => {
       headers: HEADERS_OBJECT,
     });
 
-    const moviesInTheatre = response.data.results.slice(0, 10).map((movie) => ({
+    const moviesInTheatre = response.data.results.slice(0, 6).map((movie) => ({
       backdrop_path: movie.backdrop_path,
       poster_path: movie.poster_path,
       title: movie.title,
