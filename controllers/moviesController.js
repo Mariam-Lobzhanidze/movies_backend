@@ -19,7 +19,7 @@ const getPopularMoviesByPageNumber = async (req, res) => {
       headers: HEADERS_OBJECT,
     });
 
-    const popularMovies = response.data.results.slice(0, 10).map((movie) => ({
+    const popularMovies = response.data.results.slice(0, 15).map((movie) => ({
       id: movie.id,
       title: movie.title,
       vote_average: movie.vote_average,
