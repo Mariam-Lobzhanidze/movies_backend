@@ -7,16 +7,7 @@ require("./associations");
 
 const app = express();
 
-// app.use(cors());
-const allowedOrigins = ["https://moviesapp-ml.netlify.app/"];
-
-app.use(
-  cors({
-    origin: allowedOrigins,
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true,
-  })
-);
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use("/api", routes);
