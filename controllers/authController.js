@@ -31,12 +31,16 @@ const login = async (req, res) => {
     const user = await userService.findUserByEmail(email);
     const isMatch = await bcrypt.compare(password, user.password);
 
-    if (!isMatch || !user) {
+    if (!user) {
       return res.status(401).json({ message: "Email or password not found" });
     }
 
     if (user.status === "blocked") {
       return res.status(401).json({ message: "Account is blocked." });
+    }
+
+    if (!isMatch) {
+      return res.status(401).json({ message: "Email or password not found" });
     }
 
     const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "1d" });
