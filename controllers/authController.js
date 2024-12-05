@@ -30,7 +30,7 @@ const login = async (req, res) => {
   try {
     const user = await userService.findUserByEmail(email);
     if (!user) {
-      return res.status(401).json({ message: "Email not found." });
+      return res.status(401).json({ message: "Email or password not found" });
     }
 
     if (user.status === "blocked") {
@@ -39,7 +39,7 @@ const login = async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid password." });
+      return res.status(401).json({ message: "Email or password not found" });
     }
 
     const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "1d" });
